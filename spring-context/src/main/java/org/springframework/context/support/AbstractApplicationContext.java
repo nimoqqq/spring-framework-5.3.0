@@ -552,16 +552,26 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		synchronized (this.startupShutdownMonitor) {
 			StartupStep contextRefresh = this.applicationStartup.start("spring.context.refresh");
 
-			// 准备工作，记录下容器的启动时间、标记“已启动”状态、处理配置文件中的占位符
+			/**
+			 *  准备工作，
+			 *  1.设置启动时间,设计容器激活标志(active=true)
+			 *  2.初始化 properties 资源
+			 *  3.验证必须存在的properties(validateRequiredProperties)
+			 *  4.初始earlyApplicationEnvents.用于收集已经产生的ApplicationEnvents.
+			 */
 			prepareRefresh();
 
 			// 这步比较关键，这步完成后，配置文件就会解析成一个个 Bean 定义，注册到 BeanFactory 中，
 			// 当然，这里说的 Bean 还没有初始化，只是配置信息都提取出来了，
 			// 注册也只是将这些信息都保存到了注册中心(说到底核心是一个 beanName-> beanDefinition 的 map)
+			/**
+			 * 1.调用子类的refeshBeanFactory(),SpringBoot中采用默认的实现，设置BeanFactory的SerializationId,设置refreshed标志为true。
+			 * 2.获取BeanFactory
+			 * 3.XmlWebApplicationContext ，AnnotationConfigApplicationContext 会在这一步加载BeanDefinition
+			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// 设置 BeanFactory 的类加载器，添加几个 BeanPostProcessor，手动注册几个特殊的 bean
-			// 这块待会会展开说
 			prepareBeanFactory(beanFactory);
 
 			try {
