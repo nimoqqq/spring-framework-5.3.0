@@ -13,4 +13,6 @@
 		<property name="id" value="1" />
 		<property name="name" value="nimo" />
 	</bean>
+
+	<bean id="messageService" class="com.nimo.service.impl.MessageServiceImpl"/>
 </beans>

@@ -158,14 +158,19 @@ public abstract class AnnotationConfigUtils {
 			}
 		}
 
+		// 创建 Set<BeanDefinitionHolder>，并读取 spring 内部管理的6大类默认后置处理器，添加到 Set<BeanDefinitionHolder> 类中
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
 
+		// org.springframework.context.annotation.internalConfigurationAnnotationProcessor
+		// 配置注解处理器
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));
 		}
 
+		// org.springframework.context.annotation.internalAutowiredAnnotationProcessor
+		// @AutoWired
 		if (!registry.containsBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(AutowiredAnnotationBeanPostProcessor.class);
 			def.setSource(source);
@@ -194,12 +199,16 @@ public abstract class AnnotationConfigUtils {
 			beanDefs.add(registerPostProcessor(registry, def, PERSISTENCE_ANNOTATION_PROCESSOR_BEAN_NAME));
 		}
 
+		// org.springframework.context.event.internalEventListenerProcessor
+		// @EventListener
 		if (!registry.containsBeanDefinition(EVENT_LISTENER_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(EventListenerMethodProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, EVENT_LISTENER_PROCESSOR_BEAN_NAME));
 		}
 
+		// org.springframework.context.event.internalEventListenerFactory
+		// @EventListenerFactory
 		if (!registry.containsBeanDefinition(EVENT_LISTENER_FACTORY_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(DefaultEventListenerFactory.class);
 			def.setSource(source);
